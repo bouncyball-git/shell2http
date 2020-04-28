@@ -50,30 +50,68 @@ const (
 // ------------------------------------------------------------------
 
 // INDEXHTML - Template for index page
-const INDEXHTML = `<!DOCTYPE html>
-<html>
+const INDEXHTML = `<!doctype html>
+<html lang="en">
 <head>
-    <title>❯ shell2http</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>shell2http</title>
     <style>
-    body {
-        font-family: sans-serif;
-    }
-    li {
-        list-style-type: none;
-    }
-    li:before {
-        content: "❯";
-        padding-right: 5px;
-    }
-    </style>
+		html,body {height: 100vh;}
+		body {
+			display: flex;
+			margin: 0;
+			font-family: 'BPG Arial', Roboto, 'Helvetica Neue', sans-serif;
+			background-color: #eeeeee;
+		}
+		ul{
+			margin:0;
+			padding:0;
+		}
+		li {
+			list-style-type:none;
+		}
+		li > span {
+			display:none;
+		}
+		li:hover > span {
+			display:inline-block;
+		}
+		::-webkit-scrollbar {
+			width: 0.25rem;
+		}
+
+		::-webkit-scrollbar-track {
+			background: #eeeeee;
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: #ccffcc;
+		}
+	</style>
+	<script>
+		$(document).ready(function(){
+			$("a").click(function(event){
+				event.preventDefault();
+				$("#result").load(event.target.href);
+			});
+		});
+	</script>
 </head>
 <body>
-	<h1>shell2http</h1>
-	<ul>
-		%s
-	</ul>
-	Get from: <a href="https://github.com/msoap/shell2http">github.com/msoap/shell2http</a>
-</body>
+	<div class="container-fluid row">
+		<div class="commands col-12 col-md-3">
+		<h1>shell2http</h1>
+		<ul>
+			%s
+		</ul>
+		</div>
+		<div class="col-12 col-md-9 p-2">
+			<pre id="result"></pre>
+		</div>
+	</div>
+	</body>
 </html>
 `
 
@@ -434,7 +472,7 @@ func setupHandlers(cmdHandlers []Command, appConfig Config, cacheTTL raphanus.DB
 		if row.httpMethod != "" {
 			methodDesc = row.httpMethod + ": "
 		}
-		indexLiHTML += fmt.Sprintf(`<li><a href=".%s">%s%s</a> <span style="color: #888">- %s<span></li>`, path, methodDesc, path, html.EscapeString(cmd))
+		indexLiHTML += fmt.Sprintf(`<li class="py-2"><a class="btn btn-lg btn-dark" href=".%s">%s%s</a> <span style="color: #888">- %s<span></li>`, path, methodDesc, path, html.EscapeString(cmd))
 		cmdsForLog[path] = append(cmdsForLog[path], cmd)
 
 		handler := mwMethodOnly(getShellHandler(appConfig, shell, params, cacheTTL), row.httpMethod)
@@ -467,7 +505,7 @@ func setupHandlers(cmdHandlers []Command, appConfig Config, cacheTTL raphanus.DB
 			},
 		})
 
-		indexLiHTML += fmt.Sprintf(`<li><a href=".%s">%s</a></li>`, "/exit", "/exit")
+		indexLiHTML += fmt.Sprintf(`<li class="py-3"><a href=".%s">%s</a></li>`, "/exit", "/exit")
 	}
 
 	// --------------
