@@ -102,7 +102,6 @@ const INDEXHTML = `<!doctype html>
 <body>
 	<div class="container-fluid row">
 		<div class="commands col-12 col-md-3">
-		<h1>shell2http</h1>
 		<ul>
 			%s
 		</ul>
